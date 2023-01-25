@@ -5,53 +5,70 @@
  *
  * Return: The number of characters to be printed.
  */
-int _printf(const char *format, ...)
+void handle_conversion_specifiers(char specifier, va_list args)
 {
 	int count = 0;
-	int i, j;
 	char *s;
+	int j;
 
-	va_list args;
-	va_start(args, format);
+	switch (specifier)
+	{
+		case 'c':
+			putchar(va_arg(args, int));
+			count++;
+			break;
+		case 's':
+			s = va_arg(args, char*);
+			for (j = 0; s[j]; j++)
+			{
+				putchar(s[j]);
+				count++;
+			}
+			break;
+		case '%':
+			putchar('%');
+			count++;
+			break;
+		default:
+			putchar(specifier);
+			count++;
+			break;
+	}
 
-for (i = 0; format[i] != '\0'; i++)
+}
+void write_output(char output)
+{
+	int count = 0;
+
+	putchar(output);
+	count++;
+}
+void read_format_string(const char *format, va_list args)
+{
+	int i;
+
+	for (i = 0; format[i]; i++)
 	{
 		if (format[i] == '%')
 		{
 			i++;
-			switch (format[i])
-			{
-				case 'c':
-					putchar(va_arg(args, int));
-					count++;
-					break;
-				case 's':
-					s = va_arg(args, char *);
-					for (j = 0; s[j]; j++)
-					{
-						putchar(s[j]);
-						count++;
-					}
-					break;
-				case '%':
-					putchar('%');
-					count++;
-					break;
-				default:
-					/**
-					 * Handle invalid conversion.
-					 */
-					putchar((format[i]));
-					break;
-			}
+			handle_conversion_specifiers(format[i], args);
 		}
 		else
 		{
-			putchar(format[i]);
-			count++;
+			write_output(format[i]);
 		}
 	}
-	va_end(args);
-	return count;
+
 }
-	
+
+int _printf(const char *format, ...)
+{
+	int count = 0;
+	va_list args;
+
+	va_start(args, format);
+	read_format_string(format, args);
+	va_end(args);
+	return (count);
+}
