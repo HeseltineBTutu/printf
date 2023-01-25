@@ -8,8 +8,8 @@
 int _printf(const char *format, ...)
 {
 	int count = 0;
-	int i;
-	char c;
+	int i, j;
+	char *s;
 
 	va_list args;
 	va_start(args, format);
@@ -22,28 +22,32 @@ for (i = 0; format[i] != '\0'; i++)
 			switch (format[i])
 			{
 				case 'c':
-					c = va_arg(args, int);
-					write(1, &c, sizeof(int));
+					putchar(va_arg(args, int));
 					count++;
 					break;
 				case 's':
-					write(1, va_arg(args, char *), strlen(va_arg(args, char *)));
-					count += strlen(va_arg(args, char *));
+					s = va_arg(args, char *);
+					for (j = 0; s[j]; j++)
+					{
+						putchar(s[j]);
+						count++;
+					}
 					break;
 				case '%':
-					write(1, "%", 1);
+					putchar('%');
 					count++;
 					break;
 				default:
 					/**
 					 * Handle invalid conversion.
 					 */
+					putchar((format[i]));
 					break;
 			}
 		}
 		else
 		{
-			write(1, &format[i], sizeof(char));
+			putchar(format[i]);
 			count++;
 		}
 	}
