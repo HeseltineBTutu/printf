@@ -5,14 +5,34 @@
  *
  * Return: The number of characters to be printed.
  */
+#include "main.h"
+/**
+ * _printf - Outputs a formatted string.
+ * @format: Character string to format.
+ *
+ * Return: The number of characters to be printed.
+ */
 void handle_conversion_specifiers(char specifier, va_list args)
 {
 	int count = 0;
 	char *s;
-	int j;
+	int j, num;
 
 	switch (specifier)
 	{
+		case 'd':
+		case 'i':
+		{
+			num = va_arg(args, int);
+			if(num < 0)
+			{
+				putchar('-');
+				num = -num;
+			}
+			if (num > 9) _printf("d", num/10);
+			putchar(num % 10 + '0');
+			count++;
+			break;
 		case 'c':
 			putchar(va_arg(args, int));
 			count++;
@@ -33,8 +53,8 @@ void handle_conversion_specifiers(char specifier, va_list args)
 			putchar(specifier);
 			count++;
 			break;
+		}
 	}
-
 }
 void write_output(char output)
 {
