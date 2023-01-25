@@ -5,13 +5,6 @@
  *
  * Return: The number of characters to be printed.
  */
-#include "main.h"
-/**
- * _printf - Outputs a formatted string.
- * @format: Character string to format.
- *
- * Return: The number of characters to be printed.
- */
 int _printf(const char *format, ...)
 {
 	int count = 0;
