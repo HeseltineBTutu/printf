@@ -5,5 +5,5 @@ int _printf(const char *format, ...);
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
+int _printf(const char *, ...);
 #endif
