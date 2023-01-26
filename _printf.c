@@ -52,6 +52,11 @@ int _printf(const char *format, ...)
 		    {
 			    count += printf("%p", va_arg(args, void *));
 		    }
+		    else if (*format == 'r')
+		    {
+			    printf("%r");
+			    count += 1;
+		    }
 		    else if (*format == '%')
 		    {
 			    putchar('%');
