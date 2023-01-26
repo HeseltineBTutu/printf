@@ -7,69 +7,105 @@
  */
 int _printf(const char *format, ...)
 {
-    va_list args;
-    int count = 0;
-    char *str;
+	const char *traverse;
+	signed int i;
+	char *s;
+	int count = 0;
+	unsigned long int p;
 
-    va_start(args, format);
-    while (*format != '\0')
-    {
-	    if (*format == '%')
-	    {
-		    format++;
-		    if (*format == 'c')
-		    {
-			    putchar(va_arg(args, int));
-			    count++;
-		    }
-		    else if (*format == 's')
-		    {
-			    str = va_arg(args, char *);
-			    printf("%s", str);
-			    count += strlen(str);
-		    }
-		    else if (*format == 'd' || *format == 'i')
-		    {
-			    count += printf("%d", va_arg(args, int));
-		   }
-		    else if (*format == 'u')
-		    {
-			    count += printf("%u", va_arg(args, unsigned int));
-		    }
-		    else if (*format == 'o')
-		    {
-			    count += printf("%o", va_arg(args, unsigned int));
-		    }
-		    else if (*format == 'x')
-		    {
-			    count += printf("%x", va_arg(args, unsigned int));
-		    }
-		    else if (*format == 'X')
-		    {
-			    count += printf("%X", va_arg(args, unsigned int));
-		    }
-		    else if (*format == 'p')
-		    {
-			    count += printf("%p", va_arg(args, void *));
-		    }
-		    else if (*format == 'r')
-		    {
-			    printf("%r");
-			    count += 1;
-		    }
-		    else if (*format == '%')
-		    {
-			    putchar('%');
-			    count++;
-		    }
-	    }
-	    else
-	    {
-		    putchar(*format);
-		    count++;
-	    }
-	    format++;
-    }
-    va_end(args);
-    return count;
+	va_list arg;
+	va_start(arg, format);
+
+	for (traverse = format; *traverse != '\0'; traverse++)
+	{
+		if (*traverse != '%')
+		{
+			write(1, traverse, 1);
+			count++;
+			continue;
+		}
+		traverse++;
+		switch(*traverse)
+		{
+			case 'c' : i = va_arg(arg, int);
+				   write(1, &i, 1);
+				   count++;
+				   break;
+			case 'd' : i = va_arg(arg, int);
+				   if (i < 0)
+				   {
+					   i = -i;
+					   write(1, "-", 1);
+					   count++;
+				   }
+				   count += print_string(convert(i, 10));
+				   break;
+			case 'o' : i = va_arg(arg, unsigned int);
+				   count += print_string(convert(i, 8));
+				   break;
+			case 's' : s = va_arg(arg, char *);
+				   if (!s)
+				   {
+					   s = "(null)";
+				   }
+				   count += print_string(s);
+				   break;
+			case 'x' : i = va_arg(arg, unsigned int );
+				   count += print_string(convert(i, 16));
+			           break;
+			case 'p':
+				   p = (unsigned long int) va_arg(arg, void *);
+				   count += print_string("0x");
+				   count += print_string(convert(p, 16));
+				   break;
+			case '%':
+				   write(1, "%", 1);
+				   count++;
+				   break;
+			default:
+			   write(1, traverse, 1);
+			   count++;
+			   break;
+		}
+	}
+	va_end(arg);
+	return (count);
+}
+int print_string(const char *s)
+{
+int count = 0;
+int len = strlen(s);
+int ret = write(1, s, len);
+if (ret > 0)
+	count += ret;
+return (count);
+}
+char *convert(int num, int base)
+{
+static char Representation[] = "01234456789ABCDEF";
+static char buffer[50];
+char *ptr;
+int count = 0;
+int negative = 0;
+if (num < 0 && base == 10)
+{
+	negative = 1;
+	num = -num;
+}
+
+ptr = &buffer[49];
+*ptr = '\0';
+count++;
+do
+{
+	*--ptr = Representation[num % base];
+	num /= base;
+}
+while (num != 0);
+
+if (negative)
+{
+	*--ptr = '-';
+}
+return (ptr);
 }
