@@ -72,6 +72,20 @@ int _printf(const char *format, ...)
 				   count += print_string("0x");
 				   count += print_string(convert(p, 16));
 				   break;
+			case 'X' :
+				   i = va_arg(arg, unsigned int);
+				   count += print_string(convert(i, 16));
+				   break;
+			case 'l' :
+				   i = va_arg(arg, long int);
+				   if (i <0)
+				   {
+					   i = -i;
+					   write(1, "-", 1);
+					   count++;
+				   }
+				   count +=print_string(convert(i, 10));
+				   break;
 			case '\0' :
 				   return (-1);
 				   break;
