@@ -103,13 +103,6 @@ static char Representation[] = "01234456789ABCDEF";
 static char buffer[50];
 char *ptr;
 int count = 0;
-int negative = 0;
-if (num < 0 && base == 10)
-{
-	negative = 1;
-	num = -num;
-}
-
 ptr = &buffer[49];
 *ptr = '\0';
 count++;
@@ -119,10 +112,5 @@ do
 	num /= base;
 }
 while (num != 0);
-
-if (negative)
-{
-	*--ptr = '-';
-}
 return (ptr);
 }
