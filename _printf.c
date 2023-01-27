@@ -38,10 +38,10 @@ int _printf(const char *format, ...)
 					   write(1, "-", 1);
 					   count++;
 				   }
-				   count += print_string(convert(i, 10));
+				   count += print_string(convert(i, 10, 0));
 				   break;
 			case 'o' : i = va_arg(arg, unsigned int);
-				   count += print_string(convert(i, 8));
+				   count += print_string(convert(i, 8, 0));
 				   break;
 			case 's' : s = va_arg(arg, char *);
 				   if (!s)
@@ -58,7 +58,7 @@ int _printf(const char *format, ...)
 					   write(1, "-", 1);
 					   count++;
 				   }
-				   count += print_string(convert(i, 10));
+				   count += print_string(convert(i, 10, 0));
 				   break;
 			case 'l' :
 				   i = va_arg(arg, long int);
@@ -68,25 +68,25 @@ int _printf(const char *format, ...)
 					   write(1, "-", 1);
 					   count++;
 				   }
-				   count +=print_string(convert(i, 10));
+				   count +=print_string(convert(i, 10, 0));
 				   break;
 			case 'x' :
 				   i = va_arg(arg, unsigned int);
-				   count += print_string(convert_hex(i, 16, 0));
+				   count += print_string(convert(i, 16, 0));
 				   break;
 			case 'X' :
 				   i = va_arg(arg, unsigned int);
-				   count += print_string(convert_hex(i, 16, 1));
+				   count += print_string(convert(i, 16, 1));
 				   break;
 
 			case 'u' :
 				   i = va_arg(arg, unsigned int);
-				   count += print_string(convert(i, 10));
+				   count += print_string(convert(i, 10, 0));
 				   break;
 			case 'p':
 				   p = (unsigned long int) va_arg(arg, void *);
 				   count += print_string("%x");
-				   count += print_string(convert(p, 16));
+				   count += print_string(convert(p, 16, 0));
 				   break;
 			case '\0' :
 				   return (-1);
@@ -114,12 +114,21 @@ if (ret > 0)
 	count += ret;
 return (count);
 }
-char *convert(unsigned int num, int base)
+char *convert(unsigned int num, int base, int uppercase)
 {
-static char Representation[] = "0123456789ABCDEF";
+static char Representation[] = "0123456789abcdef";
 static char buffer[50];
 char *ptr;
 int count = 0;
+if (uppercase)
+{
+	Representation[10] = 'A';
+	Representation[11] = 'B';
+	Representation[12] = 'C';
+	Representation[13] = 'D';
+	Representation[14] = 'E';
+	Representation[15] = 'F';
+}
 
 ptr = &buffer[49];
 *ptr = '\0';
@@ -131,28 +140,4 @@ do
 }
 while (num != 0);
 return (ptr);
-}
-char *convert_hex(unsigned int num, int base, int uppercase)
-{
-    static char Representation[] = "0123456789abcdef";
-    static char buffer[50];
-    char *ptr;
-    if (uppercase) {
-        Representation[10] = 'A';
-        Representation[11] = 'B';
-        Representation[12] = 'C';
-        Representation[13] = 'D';
-        Representation[14] = 'E';
-        Representation[15] = 'F';
-    }
-    ptr = &buffer[49];
-    *ptr = '\0';
-    do
-    {
-        *--ptr = Representation[num % base];
-        num /= base;
-    }
-    while (num != 0);
-
-    return (ptr);
 }
