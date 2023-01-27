@@ -40,6 +40,16 @@ int _printf(const char *format, ...)
 				   }
 				   count += print_string(convert(i, 10));
 				   break;
+			case 'i' : i = va_arg(arg, int);
+				   if (i < 0)
+				   {
+					   i = -i;
+					   write(1, "-", 1);
+					   count++;
+				   }
+				   count += print_string(convert(i, 10));
+				   break;
+
 			case 'o' : i = va_arg(arg, unsigned int);
 				   count += print_string(convert(i, 8));
 				   break;
