@@ -80,6 +80,7 @@ int _printf(const char *format, ...)
 				   count++;
 				   break;
 			default:
+			   write(1, "%", 1);
 			   write(1, traverse, 1);
 			   count++;
 			   break;
