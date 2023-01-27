@@ -85,16 +85,20 @@ int _printf(const char *format, ...)
 				   break;
 			case 'p':
 				   p = (unsigned long int) va_arg(arg, void *);
-				   count += print_string("0x");
+				   count += print_string("%x");
 				   count += print_string(convert(p, 16));
+				   break;
+			case '\0' :
+				   return (-1);
 				   break;
 			case '%':
 				   write(1, "%", 1);
 				   count++;
 				   break;
 			default:
+			   write(1, "%", 1);
 			   write(1, traverse, 1);
-			   count++;
+			   count += 2;
 			   break;
 		}
 	}
