@@ -8,5 +8,5 @@ int _printf(const char *format, ...);
 #include <unistd.h>
 int _printf(const char *, ...);
 char *convert(signed int num, int base);
-int print_string(const char* s);
+int print_string(const char *s);
 #endif
