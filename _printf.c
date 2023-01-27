@@ -50,9 +50,39 @@ int _printf(const char *format, ...)
 				   }
 				   count += print_string(s);
 				   break;
-			case 'x' : i = va_arg(arg, unsigned int );
-				   count += print_string(convert(i, 16));
-			           break;
+			case 'i' :
+				   i = va_arg(arg, int);
+				   if (i < 0)
+				   {
+					   i = -i;
+					   write(1, "-", 1);
+					   count++;
+				   }
+				   count += print_string(convert(i, 10));
+				   break;
+			case 'l' :
+				   i = va_arg(arg, long int);
+				   if (i <0)
+				   {
+					   i = -i;
+					   write(1, "-", 1);
+					   count++;
+				   }
+				   count +=print_string(convert(i, 10));
+				   break;
+			case 'x' :
+				   i = va_arg(arg, unsigned int);
+				   count += print_string(convert_hex(i, 16, 0));
+				   break;
+			case 'X' :
+				   i = va_arg(arg, unsigned int);
+				   count += print_string(convert_hex(i, 16, 1));
+				   break;
+
+			case 'u' :
+				   i = va_arg(arg, unsigned int);
+				   count += print_string(convert(i, 10));
+				   break;
 			case 'p':
 				   p = (unsigned long int) va_arg(arg, void *);
 				   count += print_string("0x");
@@ -80,18 +110,12 @@ if (ret > 0)
 	count += ret;
 return (count);
 }
-char *convert(int num, int base)
+char *convert(unsigned int num, int base)
 {
-static char Representation[] = "01234456789ABCDEF";
+static char Representation[] = "0123456789ABCDEF";
 static char buffer[50];
 char *ptr;
 int count = 0;
-int negative = 0;
-if (num < 0 && base == 10)
-{
-	negative = 1;
-	num = -num;
-}
 
 ptr = &buffer[49];
 *ptr = '\0';
@@ -102,10 +126,29 @@ do
 	num /= base;
 }
 while (num != 0);
-
-if (negative)
-{
-	*--ptr = '-';
-}
 return (ptr);
+}
+char *convert_hex(unsigned int num, int base, int uppercase)
+{
+    static char Representation[] = "0123456789abcdef";
+    static char buffer[50];
+    char *ptr;
+    if (uppercase) {
+        Representation[10] = 'A';
+        Representation[11] = 'B';
+        Representation[12] = 'C';
+        Representation[13] = 'D';
+        Representation[14] = 'E';
+        Representation[15] = 'F';
+    }
+    ptr = &buffer[49];
+    *ptr = '\0';
+    do
+    {
+        *--ptr = Representation[num % base];
+        num /= base;
+    }
+    while (num != 0);
+
+    return (ptr);
 }
