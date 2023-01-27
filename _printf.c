@@ -11,7 +11,7 @@ int _printf(const char *format, ...)
 	signed int i;
 	char *s;
 	int count = 0;
-	unsigned long int p;
+	void *p;
 
 	va_list arg;
 	va_start(arg, format);
@@ -78,15 +78,17 @@ int _printf(const char *format, ...)
 				   i = va_arg(arg, unsigned int);
 				   count += print_string(convert(i, 16, 1));
 				   break;
-
+			case 'b' :
+				   _print_binary(va_arg(arg, unsigned int));
+				   break;
 			case 'u' :
 				   i = va_arg(arg, unsigned int);
 				   count += print_string(convert(i, 10, 0));
 				   break;
 			case 'p':
-				   p = (unsigned long int) va_arg(arg, void *);
-				   count += print_string("%x");
-				   count += print_string(convert(p, 16, 0));
+				   p = va_arg(arg, void *);
+				   count += print_string("0x");
+				   count += print_string(convert((uintptr_t)p, 16, 0));
 				   break;
 			case '\0' :
 				   return (-1);
@@ -119,7 +121,7 @@ char *convert(unsigned int num, int base, int uppercase)
 static char Representation[] = "0123456789abcdef";
 static char buffer[50];
 char *ptr;
-int count = 0;
+unsigned int count = 0;
 if (uppercase)
 {
 	Representation[10] = 'A';
