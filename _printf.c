@@ -72,6 +72,9 @@ int _printf(const char *format, ...)
 				   count += print_string("0x");
 				   count += print_string(convert(p, 16));
 				   break;
+			case '\0' :
+				   return (-1);
+				   break;
 			case '%':
 				   write(1, "%", 1);
 				   count++;
