@@ -63,6 +63,10 @@ int _printf(const char *format, ...)
 			case 'x' : i = va_arg(arg, unsigned int );
 				   count += print_string(convert(i, 16));
 			           break;
+			case 'u' :
+				   i = va_arg(arg, unsigned int);
+				   count += print_string(convert(i, 10));
+				   break;
 			case 'p':
 				   p = (unsigned long int) va_arg(arg, void *);
 				   count += print_string("0x");
