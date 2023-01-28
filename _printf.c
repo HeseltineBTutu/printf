@@ -112,12 +112,13 @@ if (ret > 0)
 	count += ret;
 return (count);
 }
-char *convert(int num, int base)
+char *convert(unsigned int num, int base)
 {
 static char Representation[] = "01234456789ABCDEF";
 static char buffer[50];
 char *ptr;
 int count = 0;
+
 ptr = &buffer[49];
 *ptr = '\0';
 count++;
@@ -127,5 +128,6 @@ do
 	num /= base;
 }
 while (num != 0);
+
 return (ptr);
 }
