@@ -25,9 +25,11 @@ int _printf(const char *format, ...)
                     break;
                 }
                 case 's': {
-                    char* s = va_arg(args, char*);
+                    char *s = va_arg(args, char *);
                     int len = strlen(s);
-                    write(1, s, len);
+		    char *str = (char *)malloc(len + 1);
+		    strcpy(str, s);
+                    write(1, str, len);
                     count += len;
                     break;
                 }
