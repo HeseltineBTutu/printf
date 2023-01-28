@@ -1,70 +1,31 @@
 #include "main.h"
 /**
- * _printf - Outputs a formatted string.
- * @format: Character string to format.
- *
- * Return: The number of characters to be printed.
+ * _printf - Receives the main string and all the necessary parameters to
+ * print a formated string
+ * @format: A string containing all the desired characters
+ * Return: A total count of the characters printed
  */
 int _printf(const char *format, ...)
 {
-	int count = 0;
-	va_list args;
-	int i;
 
-	va_start(args, format);
-	for (i = 0; format[i] != '\0'; i++)
-	{
-		if (format[i] == '%')
-		{
-			i++;
-			switch (format[i])
-			{
-				case 'c':
-					{
-						char c = (char)va_arg(args, int);
+	int printed_chars;
+	conver_t f_list[] = {
 
-						write(1, &c, 1);
-						count++;
-						break;
-					}
-				case 's':
-					{
-						char *s = va_arg(args, char *);
-						int len =strlen(s);
-						char *str = (char *)malloc(len + 1);
+		{"c", print_char},
 
-						strcpy(str, s);
+		{"s", print_string},
 
-						write(1, str, len);
-						count += len;
-						break;
-					}
-				case '%':
-					{
-						char c = '%';
+		{"%", print_percent},
 
-						write(1, &c, 1);
-						count++;
-						break;
-					}
-				default:
-					{
-						char c = format[i];
+	};
+	va_list arg_list;
 
-						write(1, &c, 1);
-						count++;
-						break;
-					}
-			}
-		}
-		else
-		{
-			char c = format[i];
+	if (format == NULL)
+		return (-1);
 
-			write(1, &c, 1);
-			count++;
-		}
-	}
-	va_end(args);
-	return (count);
+	va_start(arg_list, format);
+	/*Calling parser function*/
+	printed_chars = parser(format, f_list, arg_list);
+	va_end(arg_list);
+	return (printed_chars);
 }
