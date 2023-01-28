@@ -30,7 +30,7 @@ int _printf(const char *format, ...)
 				case 's':
 					{
 						char *s = va_arg(args, char *);
-						int len = strlen(s);
+						int len =strlen(s);
 						char *str = (char *)malloc(len + 1);
 
 						strcpy(str, s);
